@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screenshot OCR v2.0</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1>Screenshot OCR</h1>
+            <div class="version">v2.0</div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-item active" data-page="process">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5,3 19,12 5,21" />
+                </svg>
+                <span class="nav-label">Process</span>
+            </div>
+            <div class="nav-item" data-page="settings">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+                <span class="nav-label">Settings</span>
+            </div>
+            <div class="nav-item" data-page="history">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12,6 12,12 16,14" />
+                </svg>
+                <span class="nav-label">History</span>
+            </div>
+            <div class="nav-item" data-page="review">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <span class="nav-label">Review</span>
+            </div>
+        </nav>
+        <div class="sidebar-footer">
+            OCR Engine: EasyOCR + Fallbacks
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+        <!-- ======================== PROCESS PAGE ======================== -->
+        <div id="page-process" class="page active">
+            <div class="page-header">
+                <h2 class="page-title">Batch Processing</h2>
+                <p class="page-subtitle">Select folders and process security camera screenshots.</p>
+            </div>
+
+            <!-- Folder Selection -->
+            <div class="card">
+                <div class="card-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    </svg>
+                    Folder Selection
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Input Folder (Screenshots)</label>
+                    <div class="input-group">
+                        <input type="text" class="form-input" id="input_folder" placeholder="Click Browse to select..."
+                            readonly>
+                        <button class="btn btn-secondary" onclick="App.browseFolder('input_folder')">Browse...</button>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">Output Folder (Renamed Files)</label>
+                    <div class="input-group">
+                        <input type="text" class="form-input" id="output_folder" placeholder="Click Browse to select..."
+                            readonly>
+                        <button class="btn btn-secondary" onclick="App.browseFolder('output_folder')">Browse...</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Start Button -->
+            <button class="btn btn-primary btn-lg btn-full" id="start-btn" onclick="App.startProcessing()">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <polygon points="5,3 13,8 5,13" />
+                </svg>
+                Start Batch Processing
+            </button>
+
+            <!-- Live Stats -->
+            <div class="stats-row mt-24">
+                <div class="stat-card">
+                    <div class="stat-value accent" id="stat-total">-</div>
+                    <div class="stat-label">Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value success" id="stat-success">-</div>
+                    <div class="stat-label">Success</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value error" id="stat-failed">-</div>
+                    <div class="stat-label">Failed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value warning" id="stat-rate">-</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+            </div>
+
+            <!-- Processing Progress (hidden until started) -->
+            <div id="processing-status" class="card hidden">
+                <div class="card-title">
+                    <div class="spinner"></div>
+                    Live Progress
+                </div>
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span class="progress-label" id="progress-detail">Waiting...</span>
+                        <span class="progress-value" id="progress-text">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill animated" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="live-log" id="live-log"></div>
+            </div>
+
+            <!-- Results (hidden until complete) -->
+            <div id="processing-results" class="card hidden">
+                <div class="card-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    Results
+                </div>
+                <p id="result-message" style="margin-bottom: 8px;"></p>
+                <p class="text-sm text-muted">Log file: <span id="result-log-path" class="font-mono"></span></p>
+                <div class="mt-12">
+                    <button class="btn btn-secondary btn-sm" onclick="App.showPage('review')">Review Failures →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================== SETTINGS PAGE ======================== -->
+        <div id="page-settings" class="page">
+            <div class="page-header">
+                <h2 class="page-title">Settings</h2>
+                <p class="page-subtitle">Configure OCR engines, accuracy, and output preferences.</p>
+            </div>
+
+            <!-- OCR Engines -->
+            <div class="card">
+                <div class="card-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="4" y="4" width="16" height="16" rx="2" />
+                        <line x1="9" y1="9" x2="15" y2="15" />
+                        <line x1="15" y1="9" x2="9" y2="15" />
+                    </svg>
+                    OCR Engines
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <span class="toggle-label">EasyOCR</span>
+                        <span class="toggle-desc">Primary engine — fast and reliable</span>
+                    </div>
+                    <label class="toggle"><input type="checkbox" id="setting-easyocr" checked><span
+                            class="toggle-slider"></span></label>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <span class="toggle-label">PaddleOCR</span>
+                        <span class="toggle-desc">Fallback — better for low contrast images</span>
+                    </div>
+                    <label class="toggle"><input type="checkbox" id="setting-paddleocr" checked><span
+                            class="toggle-slider"></span></label>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <span class="toggle-label">TrOCR</span>
+                        <span class="toggle-desc">Transformer-based — deep learning fallback</span>
+                    </div>
+                    <label class="toggle"><input type="checkbox" id="setting-trocr" checked><span
+                            class="toggle-slider"></span></label>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <span class="toggle-label">Google Cloud Vision</span>
+                        <span class="toggle-desc">Last resort — requires API credentials</span>
+                    </div>
+                    <label class="toggle"><input type="checkbox" id="setting-cloudvision" checked><span
+                            class="toggle-slider"></span></label>
+                </div>
+            </div>
+
+            <!-- Accuracy & Performance -->
+            <div class="card">
+                <div class="card-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="4" y1="21" x2="4" y2="14" />
+                        <line x1="4" y1="10" x2="4" y2="3" />
+                        <line x1="12" y1="21" x2="12" y2="12" />
+                        <line x1="12" y1="8" x2="12" y2="3" />
+                        <line x1="20" y1="21" x2="20" y2="16" />
+                        <line x1="20" y1="12" x2="20" y2="3" />
+                    </svg>
+                    Accuracy & Performance
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Cloud Vision Min. Confidence</label>
+                    <input type="number" class="form-input" id="setting-confidence" value="0.85" min="0" max="1"
+                        step="0.05" style="max-width: 200px;">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">Parallel Workers</label>
+                    <input type="number" class="form-input" id="setting-workers" value="2" min="1" max="8"
+                        style="max-width: 200px;">
+                </div>
+            </div>
+
+            <!-- Naming Template -->
+            <div class="card">
+                <div class="card-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                    </svg>
+                    Output Naming
+                </div>
+                <div class="form-group" style="margin-bottom: 8px;">
+                    <label class="form-label">Naming Template</label>
+                    <select class="form-input" id="setting-naming" style="max-width: 400px;">
+                        <option value="{YYYY}-{MM}-{DD}_{HH}_{mm}_{ss}">{YYYY}-{MM}-{DD}_{HH}_{mm}_{ss} (default)
+                        </option>
+                        <option value="{YYYY}{MM}{DD}_{HH}{mm}{ss}">{YYYY}{MM}{DD}_{HH}{mm}{ss} (compact)</option>
+                        <option value="{original}_{YYYY}-{MM}-{DD}">{original}_{YYYY}-{MM}-{DD} (keep original name)
+                        </option>
+                    </select>
+                </div>
+                <p class="text-sm text-muted">Preview: <span class="font-mono">2026-01-15_10_30_00.jpg</span></p>
+            </div>
+
+            <button class="btn btn-primary btn-lg" onclick="App.saveSettings()" style="margin-top: 4px;">
+                Save Settings
+            </button>
+        </div>
+
+        <!-- ======================== HISTORY PAGE ======================== -->
+        <div id="page-history" class="page">
+            <div class="page-header">
+                <h2 class="page-title">Processing History</h2>
+                <p class="page-subtitle">View past batch processing jobs.</p>
+            </div>
+
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Input Folder</th>
+                                <th>Total</th>
+                                <th>Success</th>
+                                <th>Failed</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-tbody">
+                            <tr>
+                                <td colspan="6" class="table-empty">No processing jobs recorded yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================== REVIEW PAGE ======================== -->
+        <div id="page-review" class="page">
+            <div class="page-header">
+                <h2 class="page-title">Review Failures</h2>
+                <p class="page-subtitle">Manually fix timestamps for images that failed OCR.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                    Failed Images
+                </div>
+                <div id="failures-container">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                            <line x1="9" y1="9" x2="9.01" y2="9" />
+                            <line x1="15" y1="9" x2="15.01" y2="9" />
+                        </svg>
+                        <p>Run a processing job first to see failed images here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>

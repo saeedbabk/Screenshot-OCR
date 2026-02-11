@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Environment
+.env
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project runtime files
+config.json
+history.db
+crash_report.txt
+
+# Data folders (user-specific)
+Input/
+output/
+uploads/
+
+# Google Cloud credentials (NEVER commit)
+ocr-screenshot-reader-*.json
+*.json
+!requirements.json
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Logs
+*.log

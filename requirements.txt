@@ -1,0 +1,11 @@
+easyocr
+torch
+torchvision
+torchaudio
+numpy
+flask
+paddleocr
+paddlepaddle
+transformers
+google-cloud-vision
+opencv-python-headless
