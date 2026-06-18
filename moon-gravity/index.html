@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="An interactive exploration of how the Moon's gravity shapes life on Earth — tides, spring and neap cycles, the lengthening day, axial stability, and the Moon's slow retreat." />
+  <title>The Moon's Pull · Gravitational Effects on Earth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Three.js WebGL canvas lives behind everything -->
+  <canvas id="scene"></canvas>
+
+  <!-- Live control HUD for the 3D Earth–Moon system -->
+  <aside class="hud" id="hud" aria-label="Simulation controls">
+    <h2 class="hud__title">Earth–Moon System</h2>
+    <p class="hud__hint">Drag the scene to orbit · scroll to zoom</p>
+
+    <label class="hud__row">
+      <span>Time speed</span>
+      <input type="range" id="speed" min="0" max="3" step="0.01" value="1" />
+    </label>
+
+    <label class="hud__row">
+      <span>Sun alignment</span>
+      <input type="range" id="sunPhase" min="0" max="6.283" step="0.01" value="0" />
+    </label>
+
+    <div class="hud__row hud__row--toggles">
+      <button class="chip is-active" id="toggleTides" type="button">Tidal bulge</button>
+      <button class="chip is-active" id="toggleOrbit" type="button">Orbit path</button>
+    </div>
+
+    <p class="hud__readout" id="readout">Configuration: <strong>Spring tide</strong> — Sun and Moon aligned, maximal pull.</p>
+  </aside>
+
+  <!-- Scroll content -->
+  <main>
+    <header class="hero">
+      <p class="hero__eyebrow">A 384,400&nbsp;km tug of war</p>
+      <h1 class="hero__title">The Moon's<br /><span>Pull on Earth</span></h1>
+      <p class="hero__lede">
+        Our nearest neighbour is a quarter-million miles away, yet its gravity
+        lifts the oceans, slows our days, steadies our seasons, and is — very
+        slowly — saying goodbye. Scroll to explore the forces, or play with the
+        live model.
+      </p>
+      <a class="hero__cta" href="#tides">Explore the effects ↓</a>
+    </header>
+
+    <section class="panel" id="tides">
+      <div class="panel__num">01</div>
+      <div class="panel__body">
+        <h2>Tides — the ocean's twice-daily breath</h2>
+        <p>
+          Gravity weakens with distance, so the Moon pulls the near side of Earth
+          harder than the planet's centre, and the centre harder than the far
+          side. This <em>difference</em> in pull — the <strong>tidal force</strong> —
+          stretches the oceans into two bulges: one facing the Moon, one directly
+          opposite. As Earth rotates beneath these bulges, every coastline sweeps
+          through roughly <strong>two high tides and two low tides a day</strong>.
+        </p>
+        <ul class="facts">
+          <li><span>~12h 25m</span> between successive high tides</li>
+          <li><span>2 bulges</span> near side &amp; far side</li>
+          <li><span>~0.5 m</span> open-ocean tidal range, far larger at coasts</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel" id="springneap">
+      <div class="panel__num">02</div>
+      <div class="panel__body">
+        <h2>Spring &amp; neap — when the Sun joins in</h2>
+        <p>
+          The Sun raises tides too, at about <strong>46%</strong> the strength of
+          the Moon's. At new and full moon the two line up and their pulls add:
+          <strong>spring tides</strong>, with the highest highs and lowest lows.
+          At the quarter moons they pull at right angles and partly cancel:
+          gentler <strong>neap tides</strong>. Drag the <em>Sun alignment</em>
+          slider in the model to swing between the two.
+        </p>
+        <div class="dualcard">
+          <div class="dualcard__item dualcard__item--spring">
+            <h3>Spring tide</h3>
+            <p>Sun + Moon aligned → reinforced bulge → extreme range.</p>
+          </div>
+          <div class="dualcard__item dualcard__item--neap">
+            <h3>Neap tide</h3>
+            <p>Sun ⟂ Moon → opposing pulls → muted range.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="day">
+      <div class="panel__num">03</div>
+      <div class="panel__body">
+        <h2>The lengthening day</h2>
+        <p>
+          The tidal bulges don't sit perfectly under the Moon — Earth's fast
+          rotation drags them slightly ahead. Their gravity tugs back on the
+          spinning planet like a brake, a process called <strong>tidal
+          friction</strong>. Earth's rotation is slowing by about
+          <strong>1.7 milliseconds per century</strong>. In the age of the
+          dinosaurs a day was barely 23 hours; growth bands in fossil corals show
+          years that once held over 400 days.
+        </p>
+        <ul class="facts">
+          <li><span>+1.7 ms</span> added to the day each century</li>
+          <li><span>~23 h</span> day length in the late Cretaceous</li>
+          <li><span>~620 Mya</span> the day was only ~21.9 hours</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel" id="recede">
+      <div class="panel__num">04</div>
+      <div class="panel__body">
+        <h2>The Moon is drifting away</h2>
+        <p>
+          Conservation of angular momentum balances the books: the spin Earth
+          loses, the Moon gains as orbital energy. So it climbs into a wider
+          orbit, retreating about <strong>3.8 cm a year</strong> — roughly the
+          rate your fingernails grow. Laser ranging off reflectors left by the
+          Apollo astronauts measures this drift directly. Far in the future,
+          total solar eclipses will end as the Moon appears too small to cover
+          the Sun.
+        </p>
+        <ul class="facts">
+          <li><span>3.8 cm/yr</span> recession, measured by laser</li>
+          <li><span>384,400 km</span> mean distance today</li>
+          <li><span>Apollo 11/14/15</span> retroreflectors still in use</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel" id="locking">
+      <div class="panel__num">05</div>
+      <div class="panel__body">
+        <h2>Tidal locking — one face, forever</h2>
+        <p>
+          The same friction that brakes Earth long ago stopped the Moon's spin
+          relative to us. Earth raised tides in the Moon's rock until its rotation
+          matched its orbit — <strong>tidal locking</strong>. That's why we only
+          ever see one hemisphere; the "far side" stayed hidden until 1959.
+        </p>
+      </div>
+    </section>
+
+    <section class="panel" id="axis">
+      <div class="panel__num">06</div>
+      <div class="panel__body">
+        <h2>A steady tilt, stable seasons</h2>
+        <p>
+          Earth's axis tilts about <strong>23.4°</strong>, and the Moon's mass
+          acts as a stabiliser, damping how far that tilt can wander. Without it,
+          gravitational nudges from the other planets could swing the tilt
+          chaotically over millions of years — wild swings in climate. The Moon
+          helps keep our seasons recognisable across the ages.
+        </p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>
+        Built with <strong>Three.js</strong>, vanilla CSS &amp; JavaScript.
+        Figures are well-established astronomical estimates, rounded for clarity.
+      </p>
+      <p class="footer__small">An interactive science explainer · no tracking, no dependencies beyond a single CDN.</p>
+    </footer>
+  </main>
+
+  <!-- Three.js from CDN via import map -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="main.js"></script>
+</body>
+</html>
